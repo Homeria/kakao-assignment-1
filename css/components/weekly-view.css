@@ -1,10 +1,103 @@
 /* ==========================================================================
-   TaskFlow CSS Module - Weekly View (Skeleton)
-   1단계: 주간 영역의 정적 구획선만 정의
+   TaskFlow CSS Module - Weekly View Component
    ========================================================================== */
 
 .weekly-section {
   border-bottom: 1px solid var(--border);
   padding-bottom: 20px;
-  min-height: 72px; /* 뼈대 확보 */
+}
+
+.weekly-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.weekly-day-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 4px 12px 4px;
+  background: var(--background);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  user-select: none;
+}
+
+.weekly-day-card:hover {
+  background: var(--primary-light);
+  transform: translateY(-2px);
+}
+
+.weekly-day-card.active {
+  background: var(--primary);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(103, 43, 224, 0.3);
+}
+
+.weekly-day-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.weekly-day-card.active .weekly-day-name {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.weekly-day-number {
+  font-family: var(--font-title);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.weekly-day-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  transition: all var(--transition-fast);
+}
+
+.weekly-day-card.active .weekly-day-badge {
+  background: #ffffff;
+  color: var(--primary);
+}
+
+.weekly-day-badge.has-todos {
+  background: var(--primary);
+}
+
+.weekly-day-card.active .weekly-day-badge.has-todos {
+  background: #ffffff;
+  color: var(--primary);
+}
+
+.weekly-day-badge.zero {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+/* Responsive styles */
+@media (max-width: 480px) {
+  .weekly-grid {
+    gap: 4px;
+  }
+  .weekly-day-card {
+    padding: 8px 2px;
+  }
+  .weekly-day-number {
+    font-size: 0.9rem;
+  }
 }
