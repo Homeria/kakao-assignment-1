@@ -1,0 +1,14 @@
+/* ==========================================================================
+   TaskFlow CSS Module - Date Header (Skeleton)
+   1단계: 일간 내비게이션 영역의 정적 높이와 배경 구획만 정의
+   ========================================================================== */
+
+.date-header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--primary-light);
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  min-height: 56px; /* 뼈대 확보 */
+}

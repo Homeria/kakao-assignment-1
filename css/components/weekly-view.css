@@ -1,0 +1,10 @@
+/* ==========================================================================
+   TaskFlow CSS Module - Weekly View (Skeleton)
+   1단계: 주간 영역의 정적 구획선만 정의
+   ========================================================================== */
+
+.weekly-section {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 20px;
+  min-height: 72px; /* 뼈대 확보 */
+}

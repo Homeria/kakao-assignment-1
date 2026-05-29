@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskFlow - Vanilla JS Todo App</title>
+  <!-- Google Fonts: Inter and Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div id="app-wrapper">
+    <div id="app-container" class="app-card">
+      <!-- App Header -->
+      <header class="app-header">
+        <h1 class="app-title" id="app-title-text">Task<span>Flow</span></h1>
+        <p class="app-subtitle">KAKAO TECH CAMPUS PRECOURSE</p>
+      </header>
+
+      <!-- 1. Weekly View Component Container -->
+      <section id="weekly-view-container" class="weekly-section" aria-label="주간 일정 선택"></section>
+
+      <!-- 2. Date Header Component Container (Daily View Navigation) -->
+      <section id="date-header-container" class="date-header-section" aria-label="일간 날짜 네비게이션"></section>
+
+      <!-- 3. Todo Input Component Container -->
+      <section id="todo-input-container" class="todo-input-section" aria-label="할 일 등록"></section>
+
+      <!-- 4. Filter Tabs Component Container -->
+      <section id="filter-tabs-container" class="filter-tabs-section" aria-label="할 일 필터 탭"></section>
+
+      <!-- 5. Todo List Component Container -->
+      <section id="todo-list-container" class="todo-list-section" aria-label="할 일 목록"></section>
+    </div>
+
+    <!-- Page Footer (Branding Credit - Elegant & Subtle) -->
+    <footer class="app-footer">
+      <p>Kakao Tech Campus Precourse · Assignment 1</p>
+      <p class="dev-credit">Developed by <span>차경호</span> (강원대학교)</p>
+    </footer>
+  </div>
+
+  <!-- Entry Script (ES Modules) -->
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

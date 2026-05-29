@@ -1,0 +1,24 @@
+/* ==========================================================================
+   TaskFlow CSS Module - Credits Footer Component
+   ========================================================================== */
+
+.app-footer {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  opacity: 0.75;
+  margin-top: 4px;
+}
+
+.app-footer span {
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.dev-credit {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
