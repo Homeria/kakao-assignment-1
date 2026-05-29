@@ -7,10 +7,51 @@
   padding-bottom: 20px;
 }
 
+/* 주간 패널 전체 레이아웃 (좌우 버튼 + 중앙 그리드) */
+.weekly-view-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+/* 주간 단위 내비게이션 단추 */
+.weekly-nav-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 700;
+  width: 26px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.weekly-nav-btn:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+  border-color: var(--primary-light);
+  transform: scale(1.05);
+}
+
+.weekly-nav-btn:active {
+  transform: scale(0.95);
+}
+
+/* 중앙 7일 카드 그리드 */
 .weekly-grid {
+  flex: 1;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
+  gap: 6px;
+  min-width: 0; /* flex item shrink 안전 속성 */
 }
 
 .weekly-day-card {
@@ -18,13 +59,14 @@
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  padding: 10px 4px 12px 4px;
+  padding: 10px 2px 12px 2px;
   background: var(--background);
   border-radius: var(--radius-md);
-  border: 1.5px solid transparent; /* 기본 보이지 않는 1.5px 선 확보 (레이아웃 틀어짐 방지) */
+  border: 1.5px solid transparent; /* 레이아웃 밀림 방지 정적 두께 확보 */
   cursor: pointer;
   transition: all var(--transition-normal);
   user-select: none;
+  min-width: 0;
 }
 
 .weekly-day-card:hover {
@@ -46,7 +88,7 @@
 }
 
 .weekly-day-name {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: var(--text-secondary);
   text-transform: uppercase;
@@ -58,22 +100,22 @@
 
 .weekly-day-number {
   font-family: var(--font-title);
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 700;
 }
 
 .weekly-day-badge {
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 700;
-  min-width: 16px;
-  height: 16px;
+  min-width: 15px;
+  height: 15px;
   border-radius: 50%;
   background: var(--text-muted);
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 4px;
+  padding: 0 3px;
   transition: all var(--transition-fast);
 }
 
@@ -98,13 +140,29 @@
 
 /* Responsive styles */
 @media (max-width: 480px) {
+  .weekly-view-container {
+    gap: 6px;
+  }
+  .weekly-nav-btn {
+    width: 22px;
+    height: 32px;
+    font-size: 0.75rem;
+  }
   .weekly-grid {
-    gap: 4px;
+    gap: 3px;
   }
   .weekly-day-card {
-    padding: 8px 2px;
+    padding: 6px 1px 8px 1px;
+  }
+  .weekly-day-name {
+    font-size: 0.65rem;
   }
   .weekly-day-number {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+  }
+  .weekly-day-badge {
+    font-size: 0.58rem;
+    min-width: 13px;
+    height: 13px;
   }
 }

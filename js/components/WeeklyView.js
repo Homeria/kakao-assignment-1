@@ -4,11 +4,13 @@
  * 이번 주(월요일~일요일) 7일간의 날짜 목록을 가로형 패널 카드로 표시합니다.
  * 요일 클릭 시 일간 뷰와 상호 연동되어 해당 날짜로 이동하고,
  * 각 요일 카드에 해당 일자의 진행 중(미완료) Todo 개수를 실시간 배지 형태로 집계하여 출력합니다.
+ * 
+ * 좌우 주간 이동 버튼(<, >)을 배치하여 일주일 단위로 전체 캘린더를 탐색하는 기능을 제공합니다.
  * 실제 현실의 오늘 날짜(Today)를 영구 테두리 하이라이트하여 UX 사용성을 고도화했습니다.
  */
 
 import store from '../core/store.js';
-import { getWeekDates, parseLocalDate } from '../utils/date.js';
+import { getWeekDates, parseLocalDate, addDays } from '../utils/date.js';
 
 export default class WeeklyView {
   /**
@@ -24,12 +26,12 @@ export default class WeeklyView {
     // 2. 초기 렌더링
     this.render();
 
-    // 3. 요일 카드 클릭 탐색 이벤트 바인딩
+    // 3. 요일 카드 및 주간 이동 버튼 클릭 이벤트 위임 바인딩
     this.bindEvents();
   }
 
   /**
-   * 스토어 상태 기반으로 주간 달력 및 실시간 개수 렌더링
+   * 스토어 상태 기반으로 주간 달력, 내비게이션 및 실시간 개수 렌더링
    */
   render() {
     const { selectedDate } = store.state;
@@ -70,22 +72,49 @@ export default class WeeklyView {
     }).join('');
 
     this.$container.innerHTML = `
-      <div class="weekly-grid">
-        ${cardsHTML}
+      <div class="weekly-view-container">
+        <!-- 이전 주로 이동 버튼 -->
+        <button id="prev-week-btn" class="weekly-nav-btn" aria-label="이전 주로 이동">&lt;</button>
+        
+        <!-- 주간 7일 카드 그리드 -->
+        <div class="weekly-grid">
+          ${cardsHTML}
+        </div>
+        
+        <!-- 다음 주로 이동 버튼 -->
+        <button id="next-week-btn" class="weekly-nav-btn" aria-label="다음 주로 이동">&gt;</button>
       </div>
     `;
   }
 
   /**
-   * 주간 캘린더 요일 카드 클릭 이벤트 바인딩 (이벤트 위임 활용)
+   * 주간 캘린더 요일 카드 및 좌우 주간 내비게이션 클릭 이벤트 위임 처리
    */
   bindEvents() {
     this.$container.addEventListener('click', (e) => {
-      const $card = e.target.closest('.weekly-day-card');
-      if (!$card) return;
+      const selectedDate = store.state.selectedDate;
 
-      const newDate = $card.dataset.date;
-      store.setSelectedDate(newDate);
+      // A. 이전 주로 이동 버튼 클릭 시 (-7일)
+      if (e.target.closest('#prev-week-btn')) {
+        const prevWeekDate = addDays(selectedDate, -7);
+        store.setSelectedDate(prevWeekDate);
+        return;
+      }
+
+      // B. 다음 주로 이동 버튼 클릭 시 (+7일)
+      if (e.target.closest('#next-week-btn')) {
+        const nextWeekDate = addDays(selectedDate, 7);
+        store.setSelectedDate(nextWeekDate);
+        return;
+      }
+
+      // C. 특정 요일 날짜 카드 클릭 시
+      const $card = e.target.closest('.weekly-day-card');
+      if ($card) {
+        const newDate = $card.dataset.date;
+        store.setSelectedDate(newDate);
+        return;
+      }
     });
   }
 }
