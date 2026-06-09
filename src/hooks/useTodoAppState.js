@@ -24,7 +24,10 @@ export function useTodoAppState() {
         todoStorageRepository.load,
         todoStorageRepository.save,
     )
-    const [selectedDate, setSelectedDate] = useState(todayDate)
+    const [selectedDate, setSelectedDate] = useStoredState(
+        () => uiStorageRepository.loadSelectedDate(todayDate),
+        uiStorageRepository.saveSelectedDate,
+    )
     const [activeFilter, setActiveFilter] = useState(TODO_FILTERS.ALL)
     const [weekStartDate, setWeekStartDate] = useStoredState(
         () => uiStorageRepository.loadWeekStartDate(getWeekStartDate(todayDate)),
@@ -50,6 +53,17 @@ export function useTodoAppState() {
     const weekDates = useMemo(() => {
         return getWeekDates(weekStartDate)
     }, [weekStartDate])
+
+    // 주간 뷰 날짜별 Todo 개수 정보입니다.
+    // 컴포넌트가 Todo 데이터 구조를 직접 알지 않도록 Hook에서 미리 계산합니다.
+    const weeklyTodoCounts = useMemo(() => {
+        return weekDates.reduce((counts, dateKey) => {
+            return {
+                ...counts,
+                [dateKey]: getTodoCountByDate(todosByDate, dateKey),
+            }
+        }, {})
+    }, [todosByDate, weekDates])
 
     const handleAddTodo = useCallback((text) => {
         setTodosByDate((previousTodosByDate) => {
@@ -84,19 +98,19 @@ export function useTodoAppState() {
     const handleSelectDate = useCallback((nextDate) => {
         setSelectedDate(nextDate)
         setWeekStartDate(getWeekStartDate(nextDate))
-    }, [setWeekStartDate])
+    }, [setSelectedDate, setWeekStartDate])
 
     const handleMoveDate = useCallback((offsetDays) => {
         const nextDate = addDays(selectedDate, offsetDays)
         setSelectedDate(nextDate)
         setWeekStartDate(getWeekStartDate(nextDate))
-    }, [selectedDate, setWeekStartDate])
+    }, [selectedDate, setSelectedDate, setWeekStartDate])
 
     const handleMoveWeek = useCallback((offsetWeeks) => {
         const nextWeekStartDate = addDays(weekStartDate, offsetWeeks * 7)
         setWeekStartDate(nextWeekStartDate)
         setSelectedDate(nextWeekStartDate)
-    }, [weekStartDate, setWeekStartDate])
+    }, [weekStartDate, setSelectedDate, setWeekStartDate])
 
     return {
         todosByDate,
@@ -108,6 +122,7 @@ export function useTodoAppState() {
         filteredTodos,
         selectedDateTodoCount,
         weekDates,
+        weeklyTodoCounts,
         addTodo: handleAddTodo,
         toggleTodo: handleToggleTodo,
         updateTodo: handleUpdateTodo,

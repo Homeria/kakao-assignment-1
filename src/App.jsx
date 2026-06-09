@@ -3,6 +3,7 @@ import { DateHeader } from './components/DateHeader'
 import { FilterTabs } from './components/FilterTabs'
 import { TodoInput } from './components/TodoInput'
 import { TodoList } from './components/TodoList'
+import { WeeklyView } from './components/WeeklyView'
 import { useTodoAppState } from './hooks/useTodoAppState'
 
 function App() {
@@ -15,6 +16,17 @@ function App() {
           Kakao Tech Campus Precourse
         </p>
         <h1 className="mt-2 text-3xl font-bold">Todo List</h1>
+
+        <div className="mt-6">
+          <WeeklyView
+            weekDates={todoApp.weekDates}
+            selectedDate={todoApp.selectedDate}
+            todayDate={todoApp.todayDate}
+            weeklyTodoCounts={todoApp.weeklyTodoCounts}
+            onSelectDate={todoApp.selectDate}
+            onMoveWeek={todoApp.moveWeek}
+          />
+        </div>
 
         <div className="mt-6">
           <DateHeader
