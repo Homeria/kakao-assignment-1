@@ -1,4 +1,6 @@
 import { TODO_FILTER_LABELS } from './constants/filters'
+import { TodoInput } from './components/TodoInput'
+import { TodoList } from './components/TodoList'
 import { useTodoAppState } from './hooks/useTodoAppState'
 import { formatDateToKorean } from './utils/date'
 
@@ -30,6 +32,19 @@ function App() {
           <p>
             <strong>주간 기준 날짜:</strong> {todoApp.weekStartDate}
           </p>
+        </div>
+
+        <div className="mt-6">
+          <TodoInput onAddTodo={todoApp.addTodo} />
+        </div>
+
+        <div className="mt-6">
+          <TodoList
+            todos={todoApp.filteredTodos}
+            onToggleTodo={todoApp.toggleTodo}
+            onUpdateTodo={todoApp.updateTodo}
+            onDeleteTodo={todoApp.deleteTodo}
+          />
         </div>
       </section>
     </main>
