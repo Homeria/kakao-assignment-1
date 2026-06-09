@@ -65,6 +65,31 @@ export function useTodoAppState() {
         }, {})
     }, [todosByDate, weekDates])
 
+    // 디버그 패널에서 사용할 전체 Todo 저장 상태 요약입니다.
+    // 화면 컴포넌트가 todosByDate 구조를 직접 순회하지 않도록 Hook에서 계산합니다.
+    const allTodoCount = useMemo(() => {
+        return Object.values(todosByDate).reduce((countInfo, todos) => {
+            const completed = todos.filter((todo) => todo.completed).length
+
+            return {
+                total: countInfo.total + todos.length,
+                active: countInfo.active + todos.length - completed,
+                completed: countInfo.completed + completed,
+            }
+        }, { total: 0, active: 0, completed: 0 })
+    }, [todosByDate])
+
+    // 현재 주간 뷰에 포함된 7일의 Todo 합계입니다.
+    const weekTodoCount = useMemo(() => {
+        return Object.values(weeklyTodoCounts).reduce((countInfo, counts) => {
+            return {
+                total: countInfo.total + counts.total,
+                active: countInfo.active + counts.active,
+                completed: countInfo.completed + counts.completed,
+            }
+        }, { total: 0, active: 0, completed: 0 })
+    }, [weeklyTodoCounts])
+
     const handleAddTodo = useCallback((text) => {
         setTodosByDate((previousTodosByDate) => {
             return addTodo(previousTodosByDate, selectedDate, text, Date.now())
@@ -121,6 +146,9 @@ export function useTodoAppState() {
         selectedDateTodos,
         filteredTodos,
         selectedDateTodoCount,
+        allTodoCount,
+        weekTodoCount,
+        storedDateCount: Object.keys(todosByDate).length,
         weekDates,
         weeklyTodoCounts,
         addTodo: handleAddTodo,
