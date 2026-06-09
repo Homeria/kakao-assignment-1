@@ -1,9 +1,9 @@
 import { TODO_FILTER_LABELS } from './constants/filters'
-import { DateHeader } from './components/DateHeader'
-import { FilterTabs } from './components/FilterTabs'
-import { TodoInput } from './components/TodoInput'
-import { TodoList } from './components/TodoList'
-import { WeeklyView } from './components/WeeklyView'
+import { DateHeader } from './components/date/DateHeader'
+import { WeeklyView } from './components/date/WeeklyView'
+import { FilterTabs } from './components/filter/FilterTabs'
+import { TodoInput } from './components/todo/TodoInput'
+import { TodoList } from './components/todo/TodoList'
 import { useTodoAppState } from './hooks/useTodoAppState'
 
 function App() {

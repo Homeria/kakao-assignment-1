@@ -1,4 +1,4 @@
-import { formatDateToKorean } from '../utils/date'
+import { formatDateToKorean } from '../../utils/date'
 
 // 선택된 날짜를 보여주고 이전/다음 날짜 이동을 요청하는 컴포넌트입니다.
 // 날짜 상태 자체는 상위 Hook이 관리하고, 이 컴포넌트는 표시와 이동 버튼만 담당합니다.

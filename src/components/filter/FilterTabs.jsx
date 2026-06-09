@@ -1,4 +1,4 @@
-import { TODO_FILTER_LABELS, TODO_FILTER_VALUES } from '../constants/filters'
+import { TODO_FILTER_LABELS, TODO_FILTER_VALUES } from '../../constants/filters'
 
 // Todo 목록의 표시 조건을 바꾸는 필터 탭 컴포넌트입니다.
 // 실제 필터 상태는 App 계층의 Hook이 관리하고, 이 컴포넌트는 현재 값과 변경 이벤트만 받습니다.
