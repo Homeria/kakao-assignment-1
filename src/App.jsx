@@ -1,9 +1,9 @@
 import { TODO_FILTER_LABELS } from './constants/filters'
+import { DateHeader } from './components/DateHeader'
 import { FilterTabs } from './components/FilterTabs'
 import { TodoInput } from './components/TodoInput'
 import { TodoList } from './components/TodoList'
 import { useTodoAppState } from './hooks/useTodoAppState'
-import { formatDateToKorean } from './utils/date'
 
 function App() {
   const todoApp = useTodoAppState()
@@ -16,10 +16,14 @@ function App() {
         </p>
         <h1 className="mt-2 text-3xl font-bold">Todo List</h1>
 
+        <div className="mt-6">
+          <DateHeader
+            selectedDate={todoApp.selectedDate}
+            onMoveDate={todoApp.moveDate}
+          />
+        </div>
+
         <div className="mt-6 grid gap-3 rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm">
-          <p>
-            <strong>선택 날짜:</strong> {formatDateToKorean(todoApp.selectedDate)}
-          </p>
           <p>
             <strong>현재 필터:</strong> {TODO_FILTER_LABELS[todoApp.activeFilter]}
           </p>
