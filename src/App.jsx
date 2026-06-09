@@ -1,4 +1,5 @@
 import { TODO_FILTER_LABELS } from './constants/filters'
+import { FilterTabs } from './components/FilterTabs'
 import { TodoInput } from './components/TodoInput'
 import { TodoList } from './components/TodoList'
 import { useTodoAppState } from './hooks/useTodoAppState'
@@ -36,6 +37,13 @@ function App() {
 
         <div className="mt-6">
           <TodoInput onAddTodo={todoApp.addTodo} />
+        </div>
+
+        <div className="mt-4">
+          <FilterTabs
+            activeFilter={todoApp.activeFilter}
+            onChangeFilter={todoApp.changeFilter}
+          />
         </div>
 
         <div className="mt-6">
