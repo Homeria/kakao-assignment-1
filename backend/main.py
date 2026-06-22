@@ -1,9 +1,9 @@
 import os
 from datetime import datetime
-from typing import Optional
+from typing import Literal, Optional
 
 from dotenv import load_dotenv
-from fastapi import Depends, FastAPI, HTTPException, Response, status
+from fastapi import Depends, FastAPI, HTTPException, Query, Response, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, ConfigDict, field_validator
 from sqlalchemy import Boolean, Column, DateTime, Integer, String, create_engine
@@ -17,6 +17,7 @@ connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite")
 engine = create_engine(DATABASE_URL, connect_args=connect_args)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+TodoFilter = Literal["all", "active", "completed"]
 
 
 class Todo(Base):
@@ -111,8 +112,26 @@ def find_todo_or_404(todo_id: int, db: Session) -> Todo:
 
 
 @app.get("/todos", response_model=list[TodoResponse])
-def get_todos(db: Session = Depends(get_db)):
-    return db.query(Todo).order_by(Todo.date.asc(), Todo.id.asc()).all()
+def get_todos(
+    date: Optional[str] = None,
+    todo_filter: TodoFilter = Query(default="all", alias="filter"),
+    search: Optional[str] = None,
+    db: Session = Depends(get_db),
+):
+    query = db.query(Todo)
+
+    if date is not None and date.strip():
+        query = query.filter(Todo.date == date.strip())
+
+    if todo_filter == "active":
+        query = query.filter(Todo.completed.is_(False))
+    elif todo_filter == "completed":
+        query = query.filter(Todo.completed.is_(True))
+
+    if search is not None and search.strip():
+        query = query.filter(Todo.title.ilike(f"%{search.strip()}%"))
+
+    return query.order_by(Todo.date.asc(), Todo.id.asc()).all()
 
 
 @app.post("/todos", response_model=TodoResponse, status_code=status.HTTP_201_CREATED)
