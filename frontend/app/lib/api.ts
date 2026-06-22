@@ -1,27 +1,4 @@
-export type TodoFilter = "all" | "active" | "completed";
-
-export type Todo = {
-  id: number;
-  title: string;
-  completed: boolean;
-  date: string | null;
-  created_at: string;
-  updated_at: string;
-};
-
-export type TodoQuery = {
-  date?: string;
-  filter?: TodoFilter;
-  search?: string;
-};
-
-export type TodoCreateInput = {
-  title: string;
-  completed?: boolean;
-  date?: string | null;
-};
-
-export type TodoUpdateInput = Partial<TodoCreateInput>;
+import type { TodoQuery } from "./todo";
 
 // FastAPI가 실패 응답을 보냈을 때 status와 원본 detail을 함께 보존합니다.
 // 화면에서는 message만 써도 되고, 디버깅이나 보고서 작성 때는 detail까지 확인할 수 있습니다.

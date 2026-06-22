@@ -5,11 +5,8 @@ import {
   buildTodosPath,
   fetchBackendJson,
   fetchBackendNoContent,
-  type Todo,
-  type TodoCreateInput,
-  type TodoQuery,
-  type TodoUpdateInput,
 } from "./lib/api";
+import type { Todo, TodoCreateInput, TodoQuery, TodoUpdateInput } from "./lib/todo";
 
 const JSON_HEADERS = {
   "Content-Type": "application/json",
