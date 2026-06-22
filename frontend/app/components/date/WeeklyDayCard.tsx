@@ -35,13 +35,16 @@ export default function WeeklyDayCard({
         {dayLabel}
       </span>
       <span className="mt-1 text-lg font-bold leading-none">{dateLabel}</span>
-      <span
-        className={`mt-2 rounded-full px-2 py-0.5 text-xs font-semibold ${
-          isSelected ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600"
-        }`}
-      >
-        {count}
-      </span>
+      {count > 0 && (
+        <span
+          className={`mt-2 rounded-full px-2 py-0.5 text-xs font-semibold ${
+            isSelected ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600"
+          }`}
+          aria-label={`${dateKey} Todo ${count}개`}
+        >
+          {count}개
+        </span>
+      )}
       {isToday && (
         <span
           className={`mt-1 text-[10px] font-bold ${isSelected ? "text-white" : "text-[#672be0]"}`}
@@ -52,4 +55,3 @@ export default function WeeklyDayCard({
     </Link>
   );
 }
-

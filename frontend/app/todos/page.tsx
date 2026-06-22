@@ -1,9 +1,15 @@
+import Link from "next/link";
 import { getTodos } from "../actions";
 import DateHeader from "../components/date/DateHeader";
 import WeeklyView from "../components/date/WeeklyView";
 import TodoList from "../components/todo/TodoList";
 import { getTodayDateKey } from "../lib/date";
-import { buildTodoQuery, parseTodoSearchParams } from "../lib/searchParams";
+import {
+  buildTodoQuery,
+  createTodoSearchHref,
+  parseTodoSearchParams,
+  toURLSearchParams,
+} from "../lib/searchParams";
 import type { Todo } from "../lib/todo";
 
 export const dynamic = "force-dynamic";
@@ -11,25 +17,6 @@ export const dynamic = "force-dynamic";
 type TodosPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
-
-function toURLSearchParams(searchParams: Record<string, string | string[] | undefined>) {
-  const urlSearchParams = new URLSearchParams();
-
-  for (const [key, value] of Object.entries(searchParams)) {
-    if (Array.isArray(value)) {
-      if (value[0] !== undefined) {
-        urlSearchParams.set(key, value[0]);
-      }
-      continue;
-    }
-
-    if (value !== undefined) {
-      urlSearchParams.set(key, value);
-    }
-  }
-
-  return urlSearchParams;
-}
 
 function getTodoCountByDate(todos: Todo[]) {
   return todos.reduce<Record<string, number>>((counts, todo) => {
@@ -68,6 +55,11 @@ export default async function TodosPage({ searchParams }: TodosPageProps) {
   const currentSearchParams = toURLSearchParams(resolvedSearchParams);
   const searchState = parseTodoSearchParams(currentSearchParams);
   const todayDate = getTodayDateKey();
+  const createSearchHref = createTodoSearchHref(currentSearchParams, {
+    date: searchState.date,
+    weekStart: searchState.weekStart,
+  });
+  const createHref = createSearchHref.replace("/todos", "/todos/new");
   const { selectedTodos, weeklyTodoCounts, errorMessage } = await getTodoPageData(searchState).catch(
     (error: unknown) => ({
       selectedTodos: [],
@@ -99,6 +91,15 @@ export default async function TodosPage({ searchParams }: TodosPageProps) {
         <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
           <DateHeader searchState={searchState} currentSearchParams={currentSearchParams} />
 
+          <div className="mt-6">
+            <Link
+              href={createHref}
+              className="inline-flex rounded-lg bg-[#672be0] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#5622be]"
+            >
+              Todo 추가
+            </Link>
+          </div>
+
           {errorMessage && (
             <div className="mt-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
               {errorMessage}
@@ -106,7 +107,11 @@ export default async function TodosPage({ searchParams }: TodosPageProps) {
           )}
 
           <div className="mt-6">
-            <TodoList todos={selectedTodos} search={searchState.search} />
+            <TodoList
+              todos={selectedTodos}
+              search={searchState.search}
+              currentSearchParams={currentSearchParams}
+            />
           </div>
         </section>
       </div>

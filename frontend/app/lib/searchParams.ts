@@ -14,6 +14,25 @@ function getParam(searchParams: URLSearchParams, key: string) {
   return value?.trim() ?? "";
 }
 
+export function toURLSearchParams(searchParams: Record<string, string | string[] | undefined>) {
+  const urlSearchParams = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(searchParams)) {
+    if (Array.isArray(value)) {
+      if (value[0] !== undefined) {
+        urlSearchParams.set(key, value[0]);
+      }
+      continue;
+    }
+
+    if (value !== undefined) {
+      urlSearchParams.set(key, value);
+    }
+  }
+
+  return urlSearchParams;
+}
+
 // URL 쿼리 파라미터를 화면에서 바로 쓰기 좋은 상태 객체로 정리합니다.
 // 잘못된 날짜나 필터 값은 기본값으로 되돌려 직접 URL을 입력해도 화면이 깨지지 않게 합니다.
 export function parseTodoSearchParams(searchParams: URLSearchParams): TodoSearchState {
@@ -77,4 +96,3 @@ export function createTodoSearchHref(
 
   return queryString ? `/todos?${queryString}` : "/todos";
 }
-
