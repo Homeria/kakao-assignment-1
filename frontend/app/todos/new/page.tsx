@@ -1,6 +1,10 @@
 import Link from "next/link";
 import TodoForm from "../../components/todo/TodoForm";
-import { createTodoListHref, parseTodoSearchParams, toURLSearchParams } from "../../lib/searchParams";
+import {
+  createTodoListHref,
+  parseTodoSearchParams,
+  toURLSearchParams,
+} from "../../lib/url/searchParams";
 
 type NewTodoPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;

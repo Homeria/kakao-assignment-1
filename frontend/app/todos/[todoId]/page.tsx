@@ -2,8 +2,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTodo } from "../../actions";
 import TodoForm from "../../components/todo/TodoForm";
-import { BackendRequestError } from "../../lib/api";
-import { createTodoListHref, parseTodoSearchParams, toURLSearchParams } from "../../lib/searchParams";
+import { BackendRequestError } from "../../lib/api/backend";
+import {
+  createTodoListHref,
+  parseTodoSearchParams,
+  toURLSearchParams,
+} from "../../lib/url/searchParams";
 
 type EditTodoPageProps = {
   params: Promise<{

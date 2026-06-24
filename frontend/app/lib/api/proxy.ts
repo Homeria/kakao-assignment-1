@@ -1,5 +1,5 @@
 import { type NextRequest } from "next/server";
-import { fetchBackendResponse, toProxyErrorResponse, toProxyResponse } from "./api";
+import { fetchBackendResponse, toProxyErrorResponse, toProxyResponse } from "./backend";
 
 type ProxyJsonRequestOptions = {
   method: "POST" | "PUT";

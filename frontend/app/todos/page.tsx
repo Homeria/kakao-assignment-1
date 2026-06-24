@@ -11,8 +11,8 @@ import {
   createNewTodoHref,
   parseTodoSearchParams,
   toURLSearchParams,
-} from "../lib/searchParams";
-import type { Todo } from "../lib/todo";
+} from "../lib/url/searchParams";
+import type { Todo } from "../lib/todo/types";
 
 export const dynamic = "force-dynamic";
 

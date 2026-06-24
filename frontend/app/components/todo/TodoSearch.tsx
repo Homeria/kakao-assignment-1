@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { createSearchHref } from "../../lib/searchParams";
+import { createSearchHref } from "../../lib/url/searchParams";
 
 type TodoSearchProps = {
   initialSearch: string;

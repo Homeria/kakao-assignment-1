@@ -1,5 +1,5 @@
-import { createEditTodoHref } from "../../lib/searchParams";
-import type { Todo } from "../../lib/todo";
+import { createEditTodoHref } from "../../lib/url/searchParams";
+import type { Todo } from "../../lib/todo/types";
 import EmptyState from "./EmptyState";
 import TodoItem from "./TodoItem";
 

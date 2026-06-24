@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { createFilterHref, type TodoSearchState } from "../../lib/searchParams";
-import { TODO_FILTER_LABELS, TODO_FILTERS, type TodoFilter } from "../../lib/todo";
+import { createFilterHref, type TodoSearchState } from "../../lib/url/searchParams";
+import { TODO_FILTER_LABELS, TODO_FILTERS, type TodoFilter } from "../../lib/todo/types";
 
 type FilterTabsProps = {
   searchState: TodoSearchState;

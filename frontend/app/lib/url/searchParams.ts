@@ -1,5 +1,5 @@
-import { getTodayDateKey, getWeekStartDate, isDateKey } from "./date";
-import { isTodoFilter, type TodoFilter, type TodoQuery } from "./todo";
+import { getTodayDateKey, getWeekStartDate, isDateKey } from "../date";
+import { isTodoFilter, type TodoFilter, type TodoQuery } from "../todo/types";
 
 export type TodoSearchState = {
   date: string;

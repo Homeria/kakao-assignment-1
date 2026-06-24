@@ -1,6 +1,6 @@
-import { requestClientApi } from "./clientApi";
-import { JSON_HEADERS } from "./http";
-import type { Todo, TodoCreateInput, TodoUpdateInput } from "./todo";
+import { requestClientApi } from "../api/client";
+import { JSON_HEADERS } from "../api/http";
+import type { Todo, TodoCreateInput, TodoUpdateInput } from "./types";
 
 function getTodoPath(todoId: string | number) {
   return `/todos/${encodeURIComponent(String(todoId))}`;

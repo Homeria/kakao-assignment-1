@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { getErrorMessage } from "../../lib/errors";
-import { deleteTodo, toggleTodo } from "../../lib/todoClient";
-import type { Todo } from "../../lib/todo";
+import { getErrorMessage } from "../../lib/api/errors";
+import { deleteTodo, toggleTodo } from "../../lib/todo/client";
+import type { Todo } from "../../lib/todo/types";
 
 type TodoItemProps = {
   todo: Todo;

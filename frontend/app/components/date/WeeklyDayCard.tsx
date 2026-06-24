@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { formatShortDate } from "../../lib/date";
-import { createDateHref, type TodoSearchState } from "../../lib/searchParams";
+import { createDateHref, type TodoSearchState } from "../../lib/url/searchParams";
 
 type WeeklyDayCardProps = {
   dateKey: string;

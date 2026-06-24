@@ -2,11 +2,11 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { getErrorMessage } from "../../lib/errors";
-import { createDateHref } from "../../lib/searchParams";
-import { createTodo, updateTodo } from "../../lib/todoClient";
-import type { Todo } from "../../lib/todo";
-import { toTodoUpdateInput, validateTodoFormValues } from "../../lib/todoValidation";
+import { getErrorMessage } from "../../lib/api/errors";
+import { createDateHref } from "../../lib/url/searchParams";
+import { createTodo, updateTodo } from "../../lib/todo/client";
+import type { Todo } from "../../lib/todo/types";
+import { toTodoUpdateInput, validateTodoFormValues } from "../../lib/todo/validation";
 
 type TodoFormProps = {
   mode: "create" | "edit";

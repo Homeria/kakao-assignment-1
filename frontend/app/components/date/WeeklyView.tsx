@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { addDays, getWeekDates } from "../../lib/date";
-import { createWeekHref, type TodoSearchState } from "../../lib/searchParams";
+import { createWeekHref, type TodoSearchState } from "../../lib/url/searchParams";
 import WeeklyDayCard from "./WeeklyDayCard";
 
 type WeeklyViewProps = {

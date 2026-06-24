@@ -1,5 +1,5 @@
 import { type NextRequest } from "next/server";
-import { createProxyJsonRequestInit, proxyBackendRequest } from "../../../lib/proxy";
+import { createProxyJsonRequestInit, proxyBackendRequest } from "../../../lib/api/proxy";
 
 type RouteContext = {
   params: Promise<{

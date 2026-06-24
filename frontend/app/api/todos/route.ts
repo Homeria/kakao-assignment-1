@@ -1,5 +1,5 @@
 import { type NextRequest } from "next/server";
-import { createProxyJsonRequestInit, proxyBackendRequest } from "../../lib/proxy";
+import { createProxyJsonRequestInit, proxyBackendRequest } from "../../lib/api/proxy";
 
 // Client Component에서 /api/todos로 요청하면 이 Route Handler가 FastAPI /todos로 전달합니다.
 // 쿼리 문자열은 그대로 넘겨 서버 기반 필터링과 검색 조건을 유지합니다.
