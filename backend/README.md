@@ -2,6 +2,25 @@
 
 FastAPI와 SQLite를 사용하는 Todo 백엔드입니다.
 
+## 구조
+
+```text
+backend/
+├─ app/
+│  ├─ __init__.py
+│  ├─ database.py
+│  ├─ models.py
+│  └─ schemas.py
+├─ main.py
+├─ requirements.txt
+└─ README.md
+```
+
+- `main.py`: FastAPI app 설정, CORS 설정, root/health/Todo endpoint 정의
+- `app/database.py`: 환경변수 로드, DB engine/session/Base/get_db 정의
+- `app/models.py`: SQLAlchemy Todo 모델 정의
+- `app/schemas.py`: Pydantic 요청/응답 스키마 정의
+
 ## 실행 준비
 
 ```powershell
@@ -52,7 +71,7 @@ search=검색어
 ## 검증
 
 ```powershell
-.\venv\Scripts\python.exe -m py_compile main.py
+.\venv\Scripts\python.exe -m py_compile main.py app\__init__.py app\database.py app\models.py app\schemas.py
 ```
 
 ## 참고

@@ -18,9 +18,11 @@ kakao-assignment-1/
 - 날짜별 Todo 생성, 조회, 수정, 삭제
 - Todo 완료 상태 토글
 - 월요일부터 일요일까지의 주간 날짜 선택
+- Todo 생성/수정 폼의 날짜 선택 UI
 - 선택 날짜 기준 Todo 목록 조회
 - URL 쿼리 기반 필터링과 검색
 - FastAPI 서버 기반 필터링과 검색
+- Todo 화면 디버그 채널
 - 백엔드 연결 실패 상황에 대한 안내 UI
 
 ## 실행 준비
@@ -109,7 +111,7 @@ npm.cmd run build
 
 ```powershell
 cd backend
-.\venv\Scripts\python.exe -m py_compile main.py
+.\venv\Scripts\python.exe -m py_compile main.py app\__init__.py app\database.py app\models.py app\schemas.py
 ```
 
 ## 참고
