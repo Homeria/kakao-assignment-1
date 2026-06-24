@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { requestClientApi } from "../../lib/clientApi";
+import { getErrorMessage } from "../../lib/errors";
+import { deleteTodo, toggleTodo } from "../../lib/todoClient";
 import type { Todo } from "../../lib/todo";
 
 type TodoItemProps = {
@@ -22,14 +23,10 @@ export default function TodoItem({ todo, editHref }: TodoItemProps) {
     setErrorMessage("");
 
     try {
-      await requestClientApi<Todo>(`/todos/${todo.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ completed: !todo.completed }),
-      });
+      await toggleTodo(todo);
       router.refresh();
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : "Todo 상태 변경에 실패했습니다.");
+      setErrorMessage(getErrorMessage(error, "Todo 상태 변경에 실패했습니다."));
     } finally {
       setIsUpdating(false);
     }
@@ -44,12 +41,10 @@ export default function TodoItem({ todo, editHref }: TodoItemProps) {
     setErrorMessage("");
 
     try {
-      await requestClientApi<void>(`/todos/${todo.id}`, {
-        method: "DELETE",
-      });
+      await deleteTodo(todo.id);
       router.refresh();
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : "Todo 삭제에 실패했습니다.");
+      setErrorMessage(getErrorMessage(error, "Todo 삭제에 실패했습니다."));
       setIsDeleting(false);
     }
   }
@@ -107,4 +102,3 @@ export default function TodoItem({ todo, editHref }: TodoItemProps) {
     </li>
   );
 }
-

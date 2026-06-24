@@ -2,9 +2,10 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { requestClientApi } from "../../lib/clientApi";
 import { isDateKey } from "../../lib/date";
+import { getErrorMessage } from "../../lib/errors";
 import { createTodoSearchHref } from "../../lib/searchParams";
+import { createTodo, updateTodo } from "../../lib/todoClient";
 import type { Todo } from "../../lib/todo";
 
 type TodoFormProps = {
@@ -48,24 +49,16 @@ export default function TodoForm({
     setErrorMessage("");
 
     try {
-      const body = JSON.stringify({
+      const input = {
         title: trimmedTitle,
         completed,
         date,
-      });
+      };
 
       if (mode === "create") {
-        await requestClientApi<Todo>("/todos", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body,
-        });
+        await createTodo(input);
       } else if (todo) {
-        await requestClientApi<Todo>(`/todos/${todo.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body,
-        });
+        await updateTodo(todo.id, input);
       }
 
       const redirectHref = createTodoSearchHref(new URLSearchParams(returnSearchParams), { date });
@@ -73,7 +66,7 @@ export default function TodoForm({
       router.push(redirectHref);
       router.refresh();
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : "Todo 저장에 실패했습니다.");
+      setErrorMessage(getErrorMessage(error, "Todo 저장에 실패했습니다."));
       setIsSubmitting(false);
     }
   }
