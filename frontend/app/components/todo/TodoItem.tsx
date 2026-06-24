@@ -35,7 +35,17 @@ export default function TodoItem({ todo, editHref }: TodoItemProps) {
   }
 
   async function handleDelete() {
-    if (!confirm("이 Todo를 삭제할까요?")) {
+    const deleteMessage = [
+      "이 Todo를 삭제하시겠습니까?",
+      "",
+      `제목: ${todo.title}`,
+      `날짜: ${todo.date ?? "날짜 없음"}`,
+      `상태: ${todo.completed ? "완료" : "진행 중"}`,
+      "",
+      "삭제한 Todo는 되돌릴 수 없습니다.",
+    ].join("\n");
+
+    if (!confirm(deleteMessage)) {
       return;
     }
 

@@ -42,11 +42,11 @@ export default async function TodosPage({ searchParams }: TodosPageProps) {
         <PageCard as="header">
           <TodoDebugPanel debugState={debugState}>
             <p className="text-sm font-semibold uppercase tracking-wide text-[#672be0]">
-              Kakao Tech Campus Assignment 3
+              Kakao Tech Campus Precourse · Assignment 3
             </p>
             <h1 className="mt-2 text-3xl font-bold text-slate-950">Todo List</h1>
             <p className="mt-4 text-sm leading-6 text-slate-600">
-              선택한 날짜의 Todo를 서버에서 조회하고, 날짜 이동 상태는 URL로 관리합니다.
+              날짜별 할 일을 정리하고 진행 상황을 가볍게 확인하세요.
             </p>
           </TodoDebugPanel>
         </PageCard>
@@ -61,17 +61,19 @@ export default async function TodosPage({ searchParams }: TodosPageProps) {
         <PageCard>
           <DateHeader searchState={searchState} currentSearchParams={currentSearchParams} />
 
-          <div className="mt-6 space-y-4">
+          <div className="mt-6 grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
             <TodoSearch
               key={searchState.search}
               initialSearch={searchState.search}
               currentSearchParams={currentSearchParams.toString()}
             />
-            <FilterTabs searchState={searchState} currentSearchParams={currentSearchParams} />
+            <ButtonLink href={createHref} className="justify-center whitespace-nowrap">
+              + Todo 추가
+            </ButtonLink>
           </div>
 
-          <div className="mt-5">
-            <ButtonLink href={createHref}>Todo 추가</ButtonLink>
+          <div className="mt-4">
+            <FilterTabs searchState={searchState} currentSearchParams={currentSearchParams} />
           </div>
 
           {errorMessage && (
