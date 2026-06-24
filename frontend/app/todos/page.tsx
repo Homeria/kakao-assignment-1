@@ -2,7 +2,9 @@ import Link from "next/link";
 import { getTodos } from "../actions";
 import DateHeader from "../components/date/DateHeader";
 import WeeklyView from "../components/date/WeeklyView";
+import FilterTabs from "../components/filter/FilterTabs";
 import TodoList from "../components/todo/TodoList";
+import TodoSearch from "../components/todo/TodoSearch";
 import { getTodayDateKey } from "../lib/date";
 import {
   buildTodoQuery,
@@ -91,7 +93,16 @@ export default async function TodosPage({ searchParams }: TodosPageProps) {
         <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
           <DateHeader searchState={searchState} currentSearchParams={currentSearchParams} />
 
-          <div className="mt-6">
+          <div className="mt-6 space-y-4">
+            <TodoSearch
+              key={searchState.search}
+              initialSearch={searchState.search}
+              currentSearchParams={currentSearchParams.toString()}
+            />
+            <FilterTabs searchState={searchState} currentSearchParams={currentSearchParams} />
+          </div>
+
+          <div className="mt-5">
             <Link
               href={createHref}
               className="inline-flex rounded-lg bg-[#672be0] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#5622be]"
