@@ -1,5 +1,14 @@
 import type { TodoQuery } from "./todo";
 
+const BACKEND_UNAVAILABLE_MESSAGE =
+  "백엔드 서버에 연결할 수 없습니다. FastAPI 서버가 실행 중인지 확인해주세요.";
+const BACKEND_URL_MISSING_MESSAGE =
+  "환경변수 BACKEND_URL이 설정되어 있지 않습니다. frontend/.env.local을 확인해주세요.";
+
+type FastApiValidationError = {
+  msg?: string;
+};
+
 // FastAPI가 실패 응답을 보냈을 때 status와 원본 detail을 함께 보존합니다.
 // 화면에서는 message만 써도 되고, 디버깅이나 보고서 작성 때는 detail까지 확인할 수 있습니다.
 export class BackendRequestError extends Error {
@@ -14,13 +23,56 @@ export class BackendRequestError extends Error {
   }
 }
 
+function getDetailMessage(detail: unknown) {
+  if (typeof detail === "string") {
+    return detail;
+  }
+
+  if (Array.isArray(detail)) {
+    const messages = detail
+      .map((item: FastApiValidationError) => item.msg)
+      .filter(Boolean);
+
+    return messages.length > 0 ? messages.join(" ") : "";
+  }
+
+  return "";
+}
+
+function getResponseErrorMessage(status: number, detail: unknown) {
+  const detailMessage =
+    typeof detail === "object" && detail !== null && "detail" in detail
+      ? getDetailMessage(detail.detail)
+      : getDetailMessage(detail);
+
+  if (detailMessage) {
+    return detailMessage;
+  }
+
+  if (status === 404) {
+    return "요청한 Todo를 찾을 수 없습니다.";
+  }
+
+  if (status === 422) {
+    return "입력값을 확인해주세요.";
+  }
+
+  if (status >= 500) {
+    return "백엔드 서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+  }
+
+  return "백엔드 API 요청에 실패했습니다.";
+}
+
 // BACKEND_URL은 서버에서만 사용하는 값입니다.
 // Client Component는 이 값을 직접 읽지 않고, /api/todos 같은 Next.js API Route를 통해 접근합니다.
 function getBackendUrl() {
   const backendUrl = process.env.BACKEND_URL;
 
   if (!backendUrl) {
-    throw new Error("BACKEND_URL 환경변수가 설정되어 있지 않습니다.");
+    throw new BackendRequestError(BACKEND_URL_MISSING_MESSAGE, 500, {
+      code: "BACKEND_URL_MISSING",
+    });
   }
 
   return backendUrl.replace(/\/$/, "");
@@ -66,10 +118,7 @@ async function assertOk(response: Response) {
   }
 
   const detail = await readResponseBody(response);
-  const message =
-    typeof detail === "object" && detail !== null && "detail" in detail
-      ? String(detail.detail)
-      : "백엔드 API 요청에 실패했습니다.";
+  const message = getResponseErrorMessage(response.status, detail);
 
   throw new BackendRequestError(message, response.status, detail);
 }
@@ -77,10 +126,21 @@ async function assertOk(response: Response) {
 // Server Component, Server Action, Route Handler에서 공통으로 사용하는 FastAPI fetch 함수입니다.
 // Todo 데이터는 항상 최신 서버 상태가 중요하므로 기본적으로 no-store를 사용합니다.
 export async function fetchBackendResponse(path: string, init: RequestInit = {}) {
-  return fetch(`${getBackendUrl()}${path}`, {
-    cache: "no-store",
-    ...init,
-  });
+  try {
+    return await fetch(`${getBackendUrl()}${path}`, {
+      cache: "no-store",
+      ...init,
+    });
+  } catch (error) {
+    if (error instanceof BackendRequestError) {
+      throw error;
+    }
+
+    throw new BackendRequestError(BACKEND_UNAVAILABLE_MESSAGE, 503, {
+      code: "BACKEND_UNAVAILABLE",
+      cause: error instanceof Error ? error.message : String(error),
+    });
+  }
 }
 
 // JSON 응답을 기대하는 요청에서 사용합니다.
@@ -120,4 +180,27 @@ export async function toProxyResponse(response: Response) {
       "content-type": contentType,
     },
   });
+}
+
+// Route Handler 안에서 FastAPI 호출 자체가 실패했을 때 클라이언트가 읽을 수 있는 JSON 응답으로 바꿉니다.
+// 이 처리가 없으면 브라우저에는 모호한 fetch failed 또는 HTML 에러 페이지가 전달될 수 있습니다.
+export function toProxyErrorResponse(error: unknown) {
+  if (error instanceof BackendRequestError) {
+    return Response.json(
+      {
+        detail: error.message,
+        status: error.status,
+        backendDetail: error.detail,
+      },
+      { status: error.status },
+    );
+  }
+
+  return Response.json(
+    {
+      detail: "알 수 없는 서버 오류가 발생했습니다.",
+      status: 500,
+    },
+    { status: 500 },
+  );
 }

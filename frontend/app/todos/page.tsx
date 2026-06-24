@@ -113,7 +113,11 @@ export default async function TodosPage({ searchParams }: TodosPageProps) {
 
           {errorMessage && (
             <div className="mt-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-              {errorMessage}
+              <p className="font-bold">Todo 데이터를 불러오지 못했습니다.</p>
+              <p className="mt-1">{errorMessage}</p>
+              <p className="mt-2 text-xs text-red-600">
+                백엔드 서버가 실행 중인지, `BACKEND_URL`이 올바른지 확인해주세요.
+              </p>
             </div>
           )}
 

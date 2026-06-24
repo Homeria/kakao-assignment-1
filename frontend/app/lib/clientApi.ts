@@ -6,6 +6,14 @@ async function readErrorMessage(response: Response) {
   const contentType = response.headers.get("content-type");
 
   if (!contentType?.includes("application/json")) {
+    if (response.status === 404) {
+      return "요청한 Todo를 찾을 수 없습니다.";
+    }
+
+    if (response.status === 503) {
+      return "백엔드 서버에 연결할 수 없습니다. FastAPI 서버가 실행 중인지 확인해주세요.";
+    }
+
     return "요청을 처리하지 못했습니다.";
   }
 
@@ -20,6 +28,10 @@ async function readErrorMessage(response: Response) {
       .map((item: { msg?: string }) => item.msg)
       .filter(Boolean)
       .join(" ");
+  }
+
+  if (response.status === 503) {
+    return "백엔드 서버에 연결할 수 없습니다. FastAPI 서버가 실행 중인지 확인해주세요.";
   }
 
   return "요청을 처리하지 못했습니다.";
