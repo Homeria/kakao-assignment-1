@@ -2,11 +2,11 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { isDateKey } from "../../lib/date";
 import { getErrorMessage } from "../../lib/errors";
 import { createTodoSearchHref } from "../../lib/searchParams";
 import { createTodo, updateTodo } from "../../lib/todoClient";
 import type { Todo } from "../../lib/todo";
+import { toTodoUpdateInput, validateTodoFormValues } from "../../lib/todoValidation";
 
 type TodoFormProps = {
   mode: "create" | "edit";
@@ -33,15 +33,14 @@ export default function TodoForm({
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const trimmedTitle = title.trim();
+    const validation = validateTodoFormValues({
+      title,
+      completed,
+      date,
+    });
 
-    if (!trimmedTitle) {
-      setErrorMessage("할 일을 입력해주세요.");
-      return;
-    }
-
-    if (!isDateKey(date)) {
-      setErrorMessage("날짜는 YYYY-MM-DD 형식으로 입력해주세요.");
+    if (!validation.isValid) {
+      setErrorMessage(validation.message);
       return;
     }
 
@@ -49,19 +48,15 @@ export default function TodoForm({
     setErrorMessage("");
 
     try {
-      const input = {
-        title: trimmedTitle,
-        completed,
-        date,
-      };
-
       if (mode === "create") {
-        await createTodo(input);
+        await createTodo(validation.input);
       } else if (todo) {
-        await updateTodo(todo.id, input);
+        await updateTodo(todo.id, toTodoUpdateInput(validation.input));
       }
 
-      const redirectHref = createTodoSearchHref(new URLSearchParams(returnSearchParams), { date });
+      const redirectHref = createTodoSearchHref(new URLSearchParams(returnSearchParams), {
+        date: validation.input.date ?? date,
+      });
 
       router.push(redirectHref);
       router.refresh();
