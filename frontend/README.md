@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend
 
-## Getting Started
+Next.js App Router 기반 Todo 프론트엔드입니다.
 
-First, run the development server:
+## 실행 준비
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```powershell
+Copy-Item .env.local.example .env.local
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`frontend/.env.local` 기본값:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+BACKEND_URL=http://localhost:8000
+NEXT_PUBLIC_API_URL=/api
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `BACKEND_URL`: Next.js 서버에서 FastAPI를 호출할 때 사용합니다.
+- `NEXT_PUBLIC_API_URL`: Client Component가 Next.js API Route를 호출할 때 사용합니다. 같은 앱의 `/api` 경로를 기본으로 둡니다.
 
-## Learn More
+## 개발 서버 실행
 
-To learn more about Next.js, take a look at the following resources:
+```powershell
+npm.cmd run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+기본 주소:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```text
+http://localhost:3000
+```
 
-## Deploy on Vercel
+## 주요 경로
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```text
+/todos            Todo 목록
+/todos/new        Todo 생성
+/todos/[todoId]   Todo 수정
+/api/todos        FastAPI 프록시
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 검증
+
+```powershell
+npm.cmd run lint
+npm.cmd run build
+```
+
+## 구조
+
+```text
+app/
+  api/          Next.js Route Handler
+  components/   화면 컴포넌트
+  lib/          API, 날짜, URL, Todo 유틸
+  todos/        Todo 페이지 라우트
+  actions.ts    Server Component용 서버 함수
+```
