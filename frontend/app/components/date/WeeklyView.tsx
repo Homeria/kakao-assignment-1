@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { addDays, getWeekDates } from "../../lib/date";
 import { createWeekHref, type TodoSearchState } from "../../lib/url/searchParams";
+import PageCard from "../ui/PageCard";
 import WeeklyDayCard from "./WeeklyDayCard";
 
 type WeeklyViewProps = {
@@ -21,7 +22,7 @@ export default function WeeklyView({
   const nextWeekStart = addDays(searchState.weekStart, 7);
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm" aria-label="주간 날짜 선택">
+    <PageCard padding="compact" aria-label="주간 날짜 선택">
       <div className="flex items-center gap-2">
         <Link
           href={createWeekHref(currentSearchParams, previousWeekStart)}
@@ -52,6 +53,6 @@ export default function WeeklyView({
           &gt;
         </Link>
       </div>
-    </section>
+    </PageCard>
   );
 }

@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { createSearchHref } from "../../lib/url/searchParams";
+import Button from "../ui/Button";
 
 type TodoSearchProps = {
   initialSearch: string;
@@ -42,13 +43,9 @@ export default function TodoSearch({ initialSearch, currentSearchParams }: TodoS
           className="min-w-0 flex-1 rounded-lg border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-[#672be0] focus:ring-2 focus:ring-[#672be0]/20"
         />
         {searchInput && (
-          <button
-            type="button"
-            onClick={() => setSearchInput("")}
-            className="shrink-0 rounded-lg border border-slate-300 px-4 py-3 text-sm font-bold text-slate-600 transition hover:bg-slate-100"
-          >
+          <Button variant="secondary" onClick={() => setSearchInput("")} className="shrink-0">
             지우기
-          </button>
+          </Button>
         )}
       </div>
     </div>

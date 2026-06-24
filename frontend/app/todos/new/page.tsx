@@ -1,5 +1,6 @@
 import Link from "next/link";
 import TodoForm from "../../components/todo/TodoForm";
+import PageCard from "../../components/ui/PageCard";
 import {
   createTodoListHref,
   parseTodoSearchParams,
@@ -17,7 +18,7 @@ export default async function NewTodoPage({ searchParams }: NewTodoPageProps) {
 
   return (
     <main className="min-h-screen px-5 py-10 text-slate-950">
-      <section className="mx-auto max-w-2xl rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <PageCard className="mx-auto max-w-2xl">
         <Link href={cancelHref} className="text-sm font-semibold text-[#672be0] hover:underline">
           목록으로 돌아가기
         </Link>
@@ -34,7 +35,7 @@ export default async function NewTodoPage({ searchParams }: NewTodoPageProps) {
             returnSearchParams={currentSearchParams.toString()}
           />
         </div>
-      </section>
+      </PageCard>
     </main>
   );
 }

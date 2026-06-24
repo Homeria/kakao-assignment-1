@@ -6,6 +6,8 @@ import { useState } from "react";
 import { getErrorMessage } from "../../lib/api/errors";
 import { deleteTodo, toggleTodo } from "../../lib/todo/client";
 import type { Todo } from "../../lib/todo/types";
+import Button from "../ui/Button";
+import ErrorMessage from "../ui/ErrorMessage";
 
 type TodoItemProps = {
   todo: Todo;
@@ -83,22 +85,18 @@ export default function TodoItem({ todo, editHref }: TodoItemProps) {
           >
             수정
           </Link>
-          <button
-            type="button"
+          <Button
+            variant="danger"
             onClick={handleDelete}
             disabled={isDeleting}
-            className="rounded-md border border-red-200 px-3 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-md px-3 py-2 font-semibold"
           >
             {isDeleting ? "삭제 중" : "삭제"}
-          </button>
+          </Button>
         </div>
       </div>
 
-      {errorMessage && (
-        <p className="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-          {errorMessage}
-        </p>
-      )}
+      {errorMessage && <ErrorMessage className="mt-3 px-3 py-2">{errorMessage}</ErrorMessage>}
     </li>
   );
 }

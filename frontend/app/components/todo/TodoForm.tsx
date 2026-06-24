@@ -7,6 +7,8 @@ import { createDateHref } from "../../lib/url/searchParams";
 import { createTodo, updateTodo } from "../../lib/todo/client";
 import type { Todo } from "../../lib/todo/types";
 import { toTodoUpdateInput, validateTodoFormValues } from "../../lib/todo/validation";
+import Button from "../ui/Button";
+import ErrorMessage from "../ui/ErrorMessage";
 
 type TodoFormProps = {
   mode: "create" | "edit";
@@ -112,27 +114,18 @@ export default function TodoForm({
         </label>
       )}
 
-      {errorMessage && (
-        <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          {errorMessage}
-        </p>
-      )}
+      {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
 
       <div className="flex flex-col gap-2 sm:flex-row">
-        <button
+        <Button
           type="submit"
           disabled={isSubmitting}
-          className="rounded-lg bg-[#672be0] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#5622be] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting ? "저장 중..." : "저장"}
-        </button>
-        <button
-          type="button"
-          onClick={() => router.push(cancelHref)}
-          className="rounded-lg border border-slate-300 px-4 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-100"
-        >
+        </Button>
+        <Button variant="secondary" onClick={() => router.push(cancelHref)}>
           취소
-        </button>
+        </Button>
       </div>
     </form>
   );
