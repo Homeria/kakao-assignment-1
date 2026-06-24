@@ -1,3 +1,4 @@
+import { ApiRequestError, createApiRequestError } from "./http";
 import type { TodoQuery } from "./todo";
 
 const BACKEND_UNAVAILABLE_MESSAGE =
@@ -5,63 +6,15 @@ const BACKEND_UNAVAILABLE_MESSAGE =
 const BACKEND_URL_MISSING_MESSAGE =
   "환경변수 BACKEND_URL이 설정되어 있지 않습니다. frontend/.env.local을 확인해주세요.";
 
-type FastApiValidationError = {
-  msg?: string;
-};
-
 // FastAPI가 실패 응답을 보냈을 때 status와 원본 detail을 함께 보존합니다.
 // 화면에서는 message만 써도 되고, 디버깅이나 보고서 작성 때는 detail까지 확인할 수 있습니다.
-export class BackendRequestError extends Error {
-  status: number;
-  detail: unknown;
-
+export class BackendRequestError extends ApiRequestError {
   constructor(message: string, status: number, detail: unknown) {
-    super(message);
+    super(message, status, detail);
     this.name = "BackendRequestError";
     this.status = status;
     this.detail = detail;
   }
-}
-
-function getDetailMessage(detail: unknown) {
-  if (typeof detail === "string") {
-    return detail;
-  }
-
-  if (Array.isArray(detail)) {
-    const messages = detail
-      .map((item: FastApiValidationError) => item.msg)
-      .filter(Boolean);
-
-    return messages.length > 0 ? messages.join(" ") : "";
-  }
-
-  return "";
-}
-
-function getResponseErrorMessage(status: number, detail: unknown) {
-  const detailMessage =
-    typeof detail === "object" && detail !== null && "detail" in detail
-      ? getDetailMessage(detail.detail)
-      : getDetailMessage(detail);
-
-  if (detailMessage) {
-    return detailMessage;
-  }
-
-  if (status === 404) {
-    return "요청한 Todo를 찾을 수 없습니다.";
-  }
-
-  if (status === 422) {
-    return "입력값을 확인해주세요.";
-  }
-
-  if (status >= 500) {
-    return "백엔드 서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
-  }
-
-  return "백엔드 API 요청에 실패했습니다.";
 }
 
 // BACKEND_URL은 서버에서만 사용하는 값입니다.
@@ -100,27 +53,17 @@ export function buildTodosPath(query: TodoQuery = {}) {
   return queryString ? `/todos?${queryString}` : "/todos";
 }
 
-// 204 No Content 응답처럼 JSON 본문이 없는 경우도 있어 content-type을 먼저 확인합니다.
-async function readResponseBody(response: Response) {
-  const contentType = response.headers.get("content-type");
-
-  if (contentType?.includes("application/json")) {
-    return response.json();
-  }
-
-  return response.text();
-}
-
 // fetch 자체는 404/422/500에서도 예외를 던지지 않으므로 직접 실패 응답을 검사합니다.
 async function assertOk(response: Response) {
   if (response.ok) {
     return;
   }
 
-  const detail = await readResponseBody(response);
-  const message = getResponseErrorMessage(response.status, detail);
+  const error = await createApiRequestError(response, {
+    fallbackMessage: "백엔드 API 요청에 실패했습니다.",
+  });
 
-  throw new BackendRequestError(message, response.status, detail);
+  throw new BackendRequestError(error.message, error.status, error.detail);
 }
 
 // Server Component, Server Action, Route Handler에서 공통으로 사용하는 FastAPI fetch 함수입니다.
@@ -185,7 +128,7 @@ export async function toProxyResponse(response: Response) {
 // Route Handler 안에서 FastAPI 호출 자체가 실패했을 때 클라이언트가 읽을 수 있는 JSON 응답으로 바꿉니다.
 // 이 처리가 없으면 브라우저에는 모호한 fetch failed 또는 HTML 에러 페이지가 전달될 수 있습니다.
 export function toProxyErrorResponse(error: unknown) {
-  if (error instanceof BackendRequestError) {
+  if (error instanceof ApiRequestError) {
     return Response.json(
       {
         detail: error.message,

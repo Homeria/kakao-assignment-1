@@ -6,11 +6,8 @@ import {
   fetchBackendJson,
   fetchBackendNoContent,
 } from "./lib/api";
+import { JSON_HEADERS } from "./lib/http";
 import type { Todo, TodoCreateInput, TodoQuery, TodoUpdateInput } from "./lib/todo";
-
-const JSON_HEADERS = {
-  "Content-Type": "application/json",
-};
 
 // Server Component에서 Todo 목록을 바로 조회할 때 사용하는 서버 함수입니다.
 // 클라이언트에 BACKEND_URL을 노출하지 않고 FastAPI를 호출할 수 있습니다.
