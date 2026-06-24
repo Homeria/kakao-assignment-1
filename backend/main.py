@@ -1,76 +1,12 @@
-import os
-from datetime import datetime
-from typing import Literal, Optional
+from typing import Optional
 
-from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, Query, Response, status
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, ConfigDict, field_validator
-from sqlalchemy import Boolean, Column, DateTime, Integer, String, create_engine
-from sqlalchemy.orm import Session, declarative_base, sessionmaker
+from sqlalchemy.orm import Session
 
-load_dotenv(".env.local")
-
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./todos.db")
-connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
-
-engine = create_engine(DATABASE_URL, connect_args=connect_args)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()
-TodoFilter = Literal["all", "active", "completed"]
-
-
-class Todo(Base):
-    __tablename__ = "todos"
-
-    id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, nullable=False)
-    completed = Column(Boolean, nullable=False, default=False)
-    date = Column(String, nullable=True)
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
-    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
-
-
-class TodoCreate(BaseModel):
-    title: str
-    completed: bool = False
-    date: Optional[str] = None
-
-    @field_validator("title")
-    @classmethod
-    def validate_title(cls, value: str) -> str:
-        trimmed_value = value.strip()
-        if not trimmed_value:
-            raise ValueError("Todo title is required.")
-        return trimmed_value
-
-
-class TodoUpdate(BaseModel):
-    title: Optional[str] = None
-    completed: Optional[bool] = None
-    date: Optional[str] = None
-
-    @field_validator("title")
-    @classmethod
-    def validate_title(cls, value: Optional[str]) -> Optional[str]:
-        if value is None:
-            return value
-
-        trimmed_value = value.strip()
-        if not trimmed_value:
-            raise ValueError("Todo title is required.")
-        return trimmed_value
-
-
-class TodoResponse(BaseModel):
-    id: int
-    title: str
-    completed: bool
-    date: Optional[str] = None
-    created_at: datetime
-    updated_at: datetime
-
-    model_config = ConfigDict(from_attributes=True)
+from app.database import Base, engine, get_db
+from app.models import Todo
+from app.schemas import TodoCreate, TodoFilter, TodoResponse, TodoUpdate
 
 
 Base.metadata.create_all(bind=engine)
@@ -94,14 +30,6 @@ def root():
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
-
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 def find_todo_or_404(todo_id: int, db: Session) -> Todo:
