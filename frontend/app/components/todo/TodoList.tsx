@@ -1,3 +1,4 @@
+import { createEditTodoHref } from "../../lib/searchParams";
 import type { Todo } from "../../lib/todo";
 import EmptyState from "./EmptyState";
 import TodoItem from "./TodoItem";
@@ -13,15 +14,13 @@ export default function TodoList({ todos, search, currentSearchParams }: TodoLis
     return <EmptyState search={search} />;
   }
 
-  const currentQueryString = currentSearchParams.toString();
-
   return (
     <ul className="space-y-3">
       {todos.map((todo) => (
         <TodoItem
           key={todo.id}
           todo={todo}
-          editHref={`/todos/${todo.id}${currentQueryString ? `?${currentQueryString}` : ""}`}
+          editHref={createEditTodoHref(todo.id, currentSearchParams)}
         />
       ))}
     </ul>

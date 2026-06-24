@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { createTodoSearchHref } from "../../lib/searchParams";
+import { createSearchHref } from "../../lib/searchParams";
 
 type TodoSearchProps = {
   initialSearch: string;
@@ -19,7 +19,7 @@ export default function TodoSearch({ initialSearch, currentSearchParams }: TodoS
 
   useEffect(() => {
     const timerId = window.setTimeout(() => {
-      const nextHref = createTodoSearchHref(searchParams, { search: searchInput });
+      const nextHref = createSearchHref(searchParams, searchInput);
 
       router.replace(nextHref);
     }, 350);

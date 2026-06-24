@@ -59,9 +59,8 @@ export function buildTodoQuery(state: TodoSearchState): TodoQuery {
   };
 }
 
-// 기존 쿼리 문자열을 보존하면서 일부 값만 바꿀 때 사용합니다.
-// 빈 문자열이나 기본값은 URL에서 제거해 주소를 짧고 읽기 쉽게 유지합니다.
-export function createTodoSearchHref(
+function createTodoHref(
+  pathname: string,
   currentSearchParams: URLSearchParams,
   updates: Partial<TodoSearchState>,
 ) {
@@ -94,5 +93,53 @@ export function createTodoSearchHref(
 
   const queryString = nextSearchParams.toString();
 
-  return queryString ? `/todos?${queryString}` : "/todos";
+  return queryString ? `${pathname}?${queryString}` : pathname;
+}
+
+// 기존 쿼리 문자열을 보존하면서 일부 값만 바꿀 때 사용합니다.
+// 빈 문자열이나 기본값은 URL에서 제거해 주소를 짧고 읽기 쉽게 유지합니다.
+export function createTodoSearchHref(
+  currentSearchParams: URLSearchParams,
+  updates: Partial<TodoSearchState>,
+) {
+  return createTodoHref("/todos", currentSearchParams, updates);
+}
+
+export function createTodoListHref(
+  currentSearchParams: URLSearchParams,
+  searchState: Pick<TodoSearchState, "date" | "weekStart">,
+) {
+  return createTodoSearchHref(currentSearchParams, searchState);
+}
+
+export function createDateHref(currentSearchParams: URLSearchParams, date: string) {
+  return createTodoSearchHref(currentSearchParams, { date });
+}
+
+export function createWeekHref(currentSearchParams: URLSearchParams, weekStart: string) {
+  return createTodoSearchHref(currentSearchParams, {
+    date: weekStart,
+    weekStart,
+  });
+}
+
+export function createFilterHref(currentSearchParams: URLSearchParams, filter: TodoFilter) {
+  return createTodoSearchHref(currentSearchParams, { filter });
+}
+
+export function createSearchHref(currentSearchParams: URLSearchParams, search: string) {
+  return createTodoSearchHref(currentSearchParams, { search });
+}
+
+export function createNewTodoHref(
+  currentSearchParams: URLSearchParams,
+  searchState: Pick<TodoSearchState, "date" | "weekStart">,
+) {
+  return createTodoHref("/todos/new", currentSearchParams, searchState);
+}
+
+export function createEditTodoHref(todoId: string | number, currentSearchParams: URLSearchParams) {
+  const pathname = `/todos/${encodeURIComponent(String(todoId))}`;
+
+  return createTodoHref(pathname, currentSearchParams, {});
 }

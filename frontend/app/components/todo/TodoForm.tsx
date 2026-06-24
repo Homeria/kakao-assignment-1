@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { getErrorMessage } from "../../lib/errors";
-import { createTodoSearchHref } from "../../lib/searchParams";
+import { createDateHref } from "../../lib/searchParams";
 import { createTodo, updateTodo } from "../../lib/todoClient";
 import type { Todo } from "../../lib/todo";
 import { toTodoUpdateInput, validateTodoFormValues } from "../../lib/todoValidation";
@@ -54,9 +54,10 @@ export default function TodoForm({
         await updateTodo(todo.id, toTodoUpdateInput(validation.input));
       }
 
-      const redirectHref = createTodoSearchHref(new URLSearchParams(returnSearchParams), {
-        date: validation.input.date ?? date,
-      });
+      const redirectHref = createDateHref(
+        new URLSearchParams(returnSearchParams),
+        validation.input.date ?? date,
+      );
 
       router.push(redirectHref);
       router.refresh();

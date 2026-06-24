@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getTodo } from "../../actions";
 import TodoForm from "../../components/todo/TodoForm";
 import { BackendRequestError } from "../../lib/api";
-import { createTodoSearchHref, parseTodoSearchParams, toURLSearchParams } from "../../lib/searchParams";
+import { createTodoListHref, parseTodoSearchParams, toURLSearchParams } from "../../lib/searchParams";
 
 type EditTodoPageProps = {
   params: Promise<{
@@ -16,10 +16,7 @@ export default async function EditTodoPage({ params, searchParams }: EditTodoPag
   const { todoId } = await params;
   const currentSearchParams = toURLSearchParams(await searchParams);
   const searchState = parseTodoSearchParams(currentSearchParams);
-  const cancelHref = createTodoSearchHref(currentSearchParams, {
-    date: searchState.date,
-    weekStart: searchState.weekStart,
-  });
+  const cancelHref = createTodoListHref(currentSearchParams, searchState);
 
   const todo = await getTodo(todoId).catch((error: unknown) => {
     if (error instanceof BackendRequestError && error.status === 404) {

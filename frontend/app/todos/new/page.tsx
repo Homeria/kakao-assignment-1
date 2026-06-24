@@ -1,6 +1,6 @@
 import Link from "next/link";
 import TodoForm from "../../components/todo/TodoForm";
-import { createTodoSearchHref, parseTodoSearchParams, toURLSearchParams } from "../../lib/searchParams";
+import { createTodoListHref, parseTodoSearchParams, toURLSearchParams } from "../../lib/searchParams";
 
 type NewTodoPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -9,10 +9,7 @@ type NewTodoPageProps = {
 export default async function NewTodoPage({ searchParams }: NewTodoPageProps) {
   const currentSearchParams = toURLSearchParams(await searchParams);
   const searchState = parseTodoSearchParams(currentSearchParams);
-  const cancelHref = createTodoSearchHref(currentSearchParams, {
-    date: searchState.date,
-    weekStart: searchState.weekStart,
-  });
+  const cancelHref = createTodoListHref(currentSearchParams, searchState);
 
   return (
     <main className="min-h-screen px-5 py-10 text-slate-950">
@@ -37,4 +34,3 @@ export default async function NewTodoPage({ searchParams }: NewTodoPageProps) {
     </main>
   );
 }
-

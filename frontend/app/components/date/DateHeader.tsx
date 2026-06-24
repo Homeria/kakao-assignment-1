@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { addDays, formatKoreanDate } from "../../lib/date";
-import { createTodoSearchHref, type TodoSearchState } from "../../lib/searchParams";
+import { createDateHref, type TodoSearchState } from "../../lib/searchParams";
 
 type DateHeaderProps = {
   searchState: TodoSearchState;
@@ -14,7 +14,7 @@ export default function DateHeader({ searchState, currentSearchParams }: DateHea
   return (
     <section className="flex items-center justify-between gap-3" aria-label="선택 날짜 이동">
       <Link
-        href={createTodoSearchHref(currentSearchParams, { date: previousDate })}
+        href={createDateHref(currentSearchParams, previousDate)}
         className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-slate-300 text-lg font-bold text-slate-600 transition hover:border-[#672be0] hover:text-[#672be0]"
         aria-label="이전 날짜로 이동"
       >
@@ -29,7 +29,7 @@ export default function DateHeader({ searchState, currentSearchParams }: DateHea
       </div>
 
       <Link
-        href={createTodoSearchHref(currentSearchParams, { date: nextDate })}
+        href={createDateHref(currentSearchParams, nextDate)}
         className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-slate-300 text-lg font-bold text-slate-600 transition hover:border-[#672be0] hover:text-[#672be0]"
         aria-label="다음 날짜로 이동"
       >
@@ -38,4 +38,3 @@ export default function DateHeader({ searchState, currentSearchParams }: DateHea
     </section>
   );
 }
-

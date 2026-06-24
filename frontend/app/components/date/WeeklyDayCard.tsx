@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { formatShortDate } from "../../lib/date";
-import { createTodoSearchHref, type TodoSearchState } from "../../lib/searchParams";
+import { createDateHref, type TodoSearchState } from "../../lib/searchParams";
 
 type WeeklyDayCardProps = {
   dateKey: string;
@@ -23,7 +23,7 @@ export default function WeeklyDayCard({
 
   return (
     <Link
-      href={createTodoSearchHref(currentSearchParams, { date: dateKey })}
+      href={createDateHref(currentSearchParams, dateKey)}
       className={`flex min-h-20 flex-col items-center justify-center rounded-lg border px-1 py-2 text-center transition ${
         isSelected
           ? "border-[#672be0] bg-[#672be0] text-white shadow-sm"

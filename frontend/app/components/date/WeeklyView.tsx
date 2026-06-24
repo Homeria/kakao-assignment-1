@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { addDays, getWeekDates } from "../../lib/date";
-import { createTodoSearchHref, type TodoSearchState } from "../../lib/searchParams";
+import { createWeekHref, type TodoSearchState } from "../../lib/searchParams";
 import WeeklyDayCard from "./WeeklyDayCard";
 
 type WeeklyViewProps = {
@@ -24,10 +24,7 @@ export default function WeeklyView({
     <section className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm" aria-label="주간 날짜 선택">
       <div className="flex items-center gap-2">
         <Link
-          href={createTodoSearchHref(currentSearchParams, {
-            date: previousWeekStart,
-            weekStart: previousWeekStart,
-          })}
+          href={createWeekHref(currentSearchParams, previousWeekStart)}
           className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-slate-300 text-base font-bold text-slate-600 transition hover:border-[#672be0] hover:text-[#672be0]"
           aria-label="이전 주로 이동"
         >
@@ -48,10 +45,7 @@ export default function WeeklyView({
         </div>
 
         <Link
-          href={createTodoSearchHref(currentSearchParams, {
-            date: nextWeekStart,
-            weekStart: nextWeekStart,
-          })}
+          href={createWeekHref(currentSearchParams, nextWeekStart)}
           className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-slate-300 text-base font-bold text-slate-600 transition hover:border-[#672be0] hover:text-[#672be0]"
           aria-label="다음 주로 이동"
         >
@@ -61,4 +55,3 @@ export default function WeeklyView({
     </section>
   );
 }
-

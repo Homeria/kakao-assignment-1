@@ -8,7 +8,7 @@ import TodoSearch from "../components/todo/TodoSearch";
 import { getTodayDateKey } from "../lib/date";
 import {
   buildTodoQuery,
-  createTodoSearchHref,
+  createNewTodoHref,
   parseTodoSearchParams,
   toURLSearchParams,
 } from "../lib/searchParams";
@@ -57,11 +57,7 @@ export default async function TodosPage({ searchParams }: TodosPageProps) {
   const currentSearchParams = toURLSearchParams(resolvedSearchParams);
   const searchState = parseTodoSearchParams(currentSearchParams);
   const todayDate = getTodayDateKey();
-  const createSearchHref = createTodoSearchHref(currentSearchParams, {
-    date: searchState.date,
-    weekStart: searchState.weekStart,
-  });
-  const createHref = createSearchHref.replace("/todos", "/todos/new");
+  const createHref = createNewTodoHref(currentSearchParams, searchState);
   const { selectedTodos, weeklyTodoCounts, errorMessage } = await getTodoPageData(searchState).catch(
     (error: unknown) => ({
       selectedTodos: [],
