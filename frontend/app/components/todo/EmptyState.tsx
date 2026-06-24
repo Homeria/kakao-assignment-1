@@ -9,9 +9,8 @@ export default function EmptyState({ search }: EmptyStateProps) {
         {search ? "검색 조건에 맞는 Todo가 없습니다." : "이 날짜에 등록된 Todo가 없습니다."}
       </p>
       <p className="mt-2 text-sm text-slate-500">
-        다음 단계에서 생성 폼을 연결해 이 영역에 Todo를 추가할 예정입니다.
+        Todo 추가 버튼을 눌러 선택한 날짜에 새 할 일을 등록해보세요.
       </p>
     </div>
   );
 }
-
