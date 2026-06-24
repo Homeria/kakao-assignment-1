@@ -1,18 +1,16 @@
 import Link from "next/link";
-import { getTodos } from "../actions";
 import DateHeader from "../components/date/DateHeader";
 import WeeklyView from "../components/date/WeeklyView";
 import FilterTabs from "../components/filter/FilterTabs";
 import TodoList from "../components/todo/TodoList";
 import TodoSearch from "../components/todo/TodoSearch";
 import { getTodayDateKey } from "../lib/date";
+import { getTodoPageData } from "../lib/todo/pageData";
 import {
-  buildTodoQuery,
   createNewTodoHref,
   parseTodoSearchParams,
   toURLSearchParams,
 } from "../lib/url/searchParams";
-import type { Todo } from "../lib/todo/types";
 
 export const dynamic = "force-dynamic";
 
@@ -20,51 +18,13 @@ type TodosPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-function getTodoCountByDate(todos: Todo[]) {
-  return todos.reduce<Record<string, number>>((counts, todo) => {
-    if (!todo.date) {
-      return counts;
-    }
-
-    return {
-      ...counts,
-      [todo.date]: (counts[todo.date] ?? 0) + 1,
-    };
-  }, {});
-}
-
-async function getTodoPageData(searchState: ReturnType<typeof parseTodoSearchParams>) {
-  const selectedTodosPromise = getTodos(buildTodoQuery(searchState));
-  const weeklySourceTodosPromise = getTodos({
-    filter: searchState.filter,
-    search: searchState.search,
-  });
-
-  const [selectedTodos, weeklySourceTodos] = await Promise.all([
-    selectedTodosPromise,
-    weeklySourceTodosPromise,
-  ]);
-
-  return {
-    selectedTodos,
-    weeklyTodoCounts: getTodoCountByDate(weeklySourceTodos),
-    errorMessage: "",
-  };
-}
-
 export default async function TodosPage({ searchParams }: TodosPageProps) {
   const resolvedSearchParams = await searchParams;
   const currentSearchParams = toURLSearchParams(resolvedSearchParams);
   const searchState = parseTodoSearchParams(currentSearchParams);
   const todayDate = getTodayDateKey();
   const createHref = createNewTodoHref(currentSearchParams, searchState);
-  const { selectedTodos, weeklyTodoCounts, errorMessage } = await getTodoPageData(searchState).catch(
-    (error: unknown) => ({
-      selectedTodos: [],
-      weeklyTodoCounts: {},
-      errorMessage: error instanceof Error ? error.message : "Todo 데이터를 불러오지 못했습니다.",
-    }),
-  );
+  const { selectedTodos, weeklyTodoCounts, errorMessage } = await getTodoPageData(searchState);
 
   return (
     <main className="min-h-screen px-5 py-10 text-slate-950">
