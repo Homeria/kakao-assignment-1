@@ -1,4 +1,5 @@
 import DateHeader from "../components/date/DateHeader";
+import TodoDebugPanel from "../components/debug/TodoDebugPanel";
 import WeeklyView from "../components/date/WeeklyView";
 import FilterTabs from "../components/filter/FilterTabs";
 import TodoList from "../components/todo/TodoList";
@@ -7,6 +8,7 @@ import ButtonLink from "../components/ui/ButtonLink";
 import ErrorMessage from "../components/ui/ErrorMessage";
 import PageCard from "../components/ui/PageCard";
 import { getTodayDateKey } from "../lib/date";
+import { createTodoDebugState } from "../lib/debug/todoDebug";
 import { getTodoPageData } from "../lib/todo/pageData";
 import {
   createNewTodoHref,
@@ -27,18 +29,26 @@ export default async function TodosPage({ searchParams }: TodosPageProps) {
   const todayDate = getTodayDateKey();
   const createHref = createNewTodoHref(currentSearchParams, searchState);
   const { selectedTodos, weeklyTodoCounts, errorMessage } = await getTodoPageData(searchState);
+  const debugState = createTodoDebugState({
+    currentSearchParams,
+    searchState,
+    selectedTodoCount: selectedTodos.length,
+    weeklyTodoCounts,
+  });
 
   return (
     <main className="min-h-screen px-5 py-10 text-slate-950">
       <div className="mx-auto flex max-w-2xl flex-col gap-6">
         <PageCard as="header">
-          <p className="text-sm font-semibold uppercase tracking-wide text-[#672be0]">
-            Kakao Tech Campus Assignment 3
-          </p>
-          <h1 className="mt-2 text-3xl font-bold text-slate-950">Todo List</h1>
-          <p className="mt-4 text-sm leading-6 text-slate-600">
-            선택한 날짜의 Todo를 서버에서 조회하고, 날짜 이동 상태는 URL로 관리합니다.
-          </p>
+          <TodoDebugPanel debugState={debugState}>
+            <p className="text-sm font-semibold uppercase tracking-wide text-[#672be0]">
+              Kakao Tech Campus Assignment 3
+            </p>
+            <h1 className="mt-2 text-3xl font-bold text-slate-950">Todo List</h1>
+            <p className="mt-4 text-sm leading-6 text-slate-600">
+              선택한 날짜의 Todo를 서버에서 조회하고, 날짜 이동 상태는 URL로 관리합니다.
+            </p>
+          </TodoDebugPanel>
         </PageCard>
 
         <WeeklyView
